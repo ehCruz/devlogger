@@ -1,8 +1,14 @@
-<ul class="list-group">
+<ul class="list-group" *ngIf="logs.length; else noLogsBlock">
     <li class="list-group-item d-flex justify-content-between align-items-center" 
-        *ngFor="let log of logs">
+    *ngFor="let log of logs"
+    [ngClass]="{'list-group-item-secondary': selectedLog.id === log.id}">
         <a (click)="onSelectLog(log)" href="#">{{log.text}}</a>
         <span class="log-date">{{log.date | date: 'short'}}</span>
-        <i class="fa fa-remove"></i>
+        <i class="fa fa-remove" (click)="onRemoveLog(log.id)"></i>
     </li>
 </ul>
+<ng-template #noLogsBlock>
+    <div class="container">
+        <p class="lead">Nenhum log registrado.</p>
+    </div>
+</ng-template>
