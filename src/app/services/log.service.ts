@@ -16,12 +16,13 @@ export class LogService {
     isClear: Observable<boolean> = this.subjectSelected.asObservable();
 
     constructor() {
-        this.logs = []
+        this.getDataFromLocalStorage();
         // this.subject = new BehaviorSubject({ id: null, text: null, date: null } as Log);
         // this.selectedLog = this.subject.asObservable();
     }
 
     getLogs(): Observable<Array<Log>> {
+        this.getDataFromLocalStorage();
         return of(this.logs);
     }
 
@@ -37,14 +38,24 @@ export class LogService {
         const index = this.logs.findIndex(el => el.id === log.id);
         this.logs.splice(index, 1);
         this.logs.unshift(log);
+        this.setDataOnLocalStorage();
     }
 
     deletLog(logUuid: string): void {
         const index = this.logs.findIndex(el => el.id === logUuid);
         this.logs.splice(index, 1);
+        this.setDataOnLocalStorage();
     }
 
     clearSelectedLogOnForm() {
         this.subjectSelected.next(true);
+    }
+
+    private getDataFromLocalStorage() {
+        localStorage.getItem('logs') ? this.logs = JSON.parse(localStorage.getItem('logs')) : this.logs = [];
+    }
+
+    private setDataOnLocalStorage() {
+        localStorage.setItem('logs', JSON.stringify(this.logs));
     }
 }
